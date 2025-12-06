@@ -4,7 +4,6 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import ThemeToggle from "@/components/ThemeToggle";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
 
 export default function Navbar() {
@@ -106,7 +105,6 @@ export default function Navbar() {
                   </div>
                 </Link>
                 <div className="flex items-center space-x-3">
-                  <ThemeToggle />
                   <span className="text-sm text-gray-700 dark:text-gray-300">
                     {session.user?.name || session.user?.email}
                   </span>
