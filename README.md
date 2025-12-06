@@ -13,6 +13,9 @@ A full-stack Next.js application that generates comprehensive courses using Goog
 - 🌙 **Dark Mode**: Full dark mode support for comfortable learning
 - 📊 **Progress Tracking**: Track your learning progress through lessons
 - 🎯 **Interactive Quizzes**: Test your knowledge with AI-generated quizzes
+- 🧠 **Spaced Repetition System (SRS)**: Smart review scheduling based on forgetting curve to maximize retention
+- 📈 **Retention Analytics**: Track your learning retention rate and study streaks
+- 🔔 **Review Reminders**: Get notified when it's time to review learned material
 - 🔖 **Bookmarks & Notes**: Take notes and bookmark important lessons
 - ⭐ **Favorites**: Mark courses as favorites for quick access
 - 🔗 **Course Sharing**: Share your courses publicly with shareable links
@@ -115,15 +118,22 @@ npm start
    - Take quizzes to test your knowledge
    - View your progress percentage on the course detail page
 
-4. **Export Courses**:
+4. **Smart Review System (SRS)**:
+   - Complete quizzes to activate spaced repetition
+   - System automatically schedules optimal review dates
+   - Check "Reviews" page for due and upcoming reviews
+   - Get notifications when reviews are due
+   - Track your retention rate and study streaks
+
+5. **Export Courses**:
    - Click "Export as PDF" to download a formatted PDF version
    - Click "Export as Markdown" to download a Markdown file
 
-5. **Take Notes & Bookmark**:
+6. **Take Notes & Bookmark**:
    - Click the bookmark icon to save important lessons
    - Use the notes editor to write personal notes for each lesson
 
-6. **Share Courses**:
+7. **Share Courses**:
    - Make courses public and share via generated links
    - Others can view and clone your public courses
 
@@ -162,6 +172,10 @@ npm start
 - `GET /api/courses/[id]/export` - Export course as PDF or Markdown
 - `GET /api/progress` - Get user's learning progress
 - `POST /api/progress` - Update lesson progress
+- `POST /api/quizzes/submit` - Submit quiz answers (automatically creates SRS reviews)
+- `GET /api/reviews` - Get quiz reviews (supports filters: due, overdue, upcoming, all)
+- `GET /api/reviews/stats` - Get review statistics and retention data
+- `POST /api/reviews/update` - Update review schedule after quiz completion
 - `GET /api/notes` - Get user's notes
 - `POST /api/notes` - Create a note
 - `GET /api/bookmarks` - Get user's bookmarks

@@ -185,6 +185,34 @@ export const quizAttempts = sqliteTable("quiz_attempts", {
     .$defaultFn(() => new Date()),
 });
 
+// Spaced Repetition System (SRS) - Quiz Reviews
+export const quizReviews = sqliteTable("quiz_reviews", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  lessonId: integer("lesson_id")
+    .notNull()
+    .references(() => lessons.id, { onDelete: "cascade" }),
+  lastAttemptId: integer("last_attempt_id").references(() => quizAttempts.id, {
+    onDelete: "set null",
+  }),
+  nextReviewDate: integer("next_review_date", { mode: "timestamp" }).notNull(),
+  reviewCount: integer("review_count").notNull().$defaultFn(() => 0),
+  currentInterval: integer("current_interval").notNull().$defaultFn(() => 1), // in days
+  lastScore: integer("last_score").notNull(), // 0-100
+  averageScore: integer("average_score").notNull(), // running average
+  retentionRate: integer("retention_rate").notNull().$defaultFn(() => 100), // 0-100
+  status: text("status").notNull().$defaultFn(() => "new"), // 'new', 'learning', 'reviewing', 'mastered'
+  easeFactor: integer("ease_factor").notNull().$defaultFn(() => 250), // SM-2 algorithm (250 = 2.5)
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
+
 export const userProgressRelations = relations(userProgress, ({ one }) => ({
   user: one(users, {
     fields: [userProgress.userId],
@@ -207,6 +235,21 @@ export const quizAttemptsRelations = relations(quizAttempts, ({ one }) => ({
   }),
 }));
 
+export const quizReviewsRelations = relations(quizReviews, ({ one }) => ({
+  user: one(users, {
+    fields: [quizReviews.userId],
+    references: [users.id],
+  }),
+  lesson: one(lessons, {
+    fields: [quizReviews.lessonId],
+    references: [lessons.id],
+  }),
+  lastAttempt: one(quizAttempts, {
+    fields: [quizReviews.lastAttemptId],
+    references: [quizAttempts.id],
+  }),
+}));
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Account = typeof accounts.$inferSelect;
@@ -221,6 +264,8 @@ export type UserProgress = typeof userProgress.$inferSelect;
 export type NewUserProgress = typeof userProgress.$inferInsert;
 export type QuizAttempt = typeof quizAttempts.$inferSelect;
 export type NewQuizAttempt = typeof quizAttempts.$inferInsert;
+export type QuizReview = typeof quizReviews.$inferSelect;
+export type NewQuizReview = typeof quizReviews.$inferInsert;
 
 // Notes for lessons
 export const notes = sqliteTable("notes", {

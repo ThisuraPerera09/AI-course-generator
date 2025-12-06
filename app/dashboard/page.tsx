@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import RetentionStats from "@/components/RetentionStats";
 
 interface Analytics {
   totalCourses: number;
@@ -130,7 +131,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* Time Spent */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -158,36 +159,48 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="mt-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Learning Statistics
-        </h3>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Total Lessons Completed
-            </p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              {analytics.stats.totalLessonsCompleted}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Total Quizzes Taken
-            </p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              {analytics.stats.totalQuizzes}
-            </p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Learning Statistics */}
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            Learning Statistics
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Total Lessons Completed
+              </p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                {analytics.stats.totalLessonsCompleted}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Total Quizzes Taken
+              </p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                {analytics.stats.totalQuizzes}
+              </p>
+            </div>
           </div>
         </div>
+
+        {/* Retention Stats Component */}
+        <RetentionStats />
       </div>
 
-      <div className="mt-8 flex gap-4">
+      <div className="flex gap-4">
         <Link
           href="/courses"
           className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
         >
           View My Courses
+        </Link>
+        <Link
+          href="/reviews"
+          className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
+        >
+          Review Schedule
         </Link>
         <Link
           href="/favorites"

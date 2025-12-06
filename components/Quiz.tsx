@@ -178,24 +178,66 @@ export default function Quiz({ questions, lessonTitle, lessonId }: QuizProps) {
           </p>
         </div>
       ) : (
-        <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg">
-          <div className="text-center">
-            <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              Quiz Results
-            </h4>
-            <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-              {results?.score}%
+        <div className="mt-6 space-y-4">
+          {/* Main Results */}
+          <div className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg">
+            <div className="text-center">
+              <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                Quiz Results
+              </h4>
+              <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+                {results?.score}%
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">
+                You got {results?.correctCount} out of {results?.totalCount}{" "}
+                questions correct!
+              </p>
             </div>
-            <p className="text-gray-700 dark:text-gray-300">
-              You got {results?.correctCount} out of {results?.totalCount}{" "}
-              questions correct!
-            </p>
+          </div>
+
+          {/* SRS Feedback */}
+          <div className="p-6 bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 rounded-lg border-2 border-green-200 dark:border-green-800">
+            <div className="flex items-start gap-4">
+              <div className="text-4xl">🧠</div>
+              <div className="flex-1">
+                <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                  Spaced Repetition Activated!
+                </h4>
+                <p className="text-gray-700 dark:text-gray-300 mb-3">
+                  {results?.score >= 95
+                    ? "🎉 Excellent! You'll review this in 7 days to reinforce your memory."
+                    : results?.score >= 85
+                    ? "⭐ Great job! Review scheduled in 3 days to solidify your knowledge."
+                    : results?.score >= 70
+                    ? "📚 Good progress! You'll review this tomorrow to improve retention."
+                    : "🔄 Keep practicing! Review scheduled for tomorrow to help you master this."}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-white dark:bg-gray-800 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300">
+                    📅 Next review calculated
+                  </span>
+                  <span className="px-3 py-1 bg-white dark:bg-gray-800 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300">
+                    🔔 Reminder will be shown
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3">
             <button
               onClick={handleReset}
-              className="mt-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+              className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
             >
               Retake Quiz
             </button>
+            <a
+              href="/reviews"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors text-center"
+            >
+              View Review Schedule
+            </a>
           </div>
         </div>
       )}

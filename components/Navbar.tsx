@@ -3,6 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
 
@@ -10,11 +11,33 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
+  const [reviewCount, setReviewCount] = useState(0);
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
     router.push("/auth/signin");
     router.refresh();
+  };
+
+  useEffect(() => {
+    if (session) {
+      fetchReviewCount();
+      // Refresh count every 5 minutes
+      const interval = setInterval(fetchReviewCount, 5 * 60 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [session]);
+
+  const fetchReviewCount = async () => {
+    try {
+      const response = await fetch("/api/reviews/stats");
+      if (response.ok) {
+        const data = await response.json();
+        setReviewCount(data.dueToday + data.overdue);
+      }
+    } catch (error) {
+      console.error("Error fetching review count:", error);
+    }
   };
 
   const getLinkClassName = (path: string) => {
@@ -71,6 +94,16 @@ export default function Navbar() {
                   className={getLinkClassName("/dashboard")}
                 >
                   Dashboard
+                </Link>
+                <Link href="/reviews" className={getLinkClassName("/reviews")}>
+                  <div className="flex items-center gap-2">
+                    <span>Reviews</span>
+                    {reviewCount > 0 && (
+                      <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full animate-pulse">
+                        {reviewCount > 99 ? "99+" : reviewCount}
+                      </span>
+                    )}
+                  </div>
                 </Link>
                 <div className="flex items-center space-x-3">
                   <ThemeToggle />
