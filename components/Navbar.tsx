@@ -2,18 +2,28 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
     router.push("/auth/signin");
     router.refresh();
+  };
+
+  const getLinkClassName = (path: string) => {
+    const isActive = pathname === path;
+    return `${
+      isActive
+        ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
+        : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+    } px-3 py-2 rounded-md text-sm font-medium transition-colors`;
   };
 
   return (
@@ -35,39 +45,30 @@ export default function Navbar() {
               </span>
             ) : session ? (
               <>
-                <Link
-                  href="/"
-                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
+                <Link href="/" className={getLinkClassName("/")}>
                   Home
                 </Link>
-                <Link
-                  href="/courses"
-                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
+                <Link href="/courses" className={getLinkClassName("/courses")}>
                   My Courses
                 </Link>
                 <Link
                   href="/generate"
-                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className={getLinkClassName("/generate")}
                 >
                   Generate
                 </Link>
-                <Link
-                  href="/public"
-                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
+                <Link href="/public" className={getLinkClassName("/public")}>
                   Public Gallery
                 </Link>
                 <Link
                   href="/favorites"
-                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className={getLinkClassName("/favorites")}
                 >
                   Favorites
                 </Link>
                 <Link
                   href="/dashboard"
-                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className={getLinkClassName("/dashboard")}
                 >
                   Dashboard
                 </Link>

@@ -9,6 +9,13 @@ A full-stack Next.js application that generates comprehensive courses using Goog
 - 🎯 **Customizable**: Choose your topic, difficulty level (beginner/intermediate/advanced), and course duration
 - 💾 **Persistent Storage**: Save and manage your generated courses using SQLite database with Drizzle ORM
 - 🎨 **Modern UI**: Beautiful, responsive interface built with Tailwind CSS
+- 📄 **Export Options**: Export courses as PDF or Markdown files
+- 🌙 **Dark Mode**: Full dark mode support for comfortable learning
+- 📊 **Progress Tracking**: Track your learning progress through lessons
+- 🎯 **Interactive Quizzes**: Test your knowledge with AI-generated quizzes
+- 🔖 **Bookmarks & Notes**: Take notes and bookmark important lessons
+- ⭐ **Favorites**: Mark courses as favorites for quick access
+- 🔗 **Course Sharing**: Share your courses publicly with shareable links
 
 ## Tech Stack
 
@@ -103,8 +110,22 @@ npm start
    - Go to "My Courses" to see all your generated courses
    - Click on any course to view its details and lessons
 
-3. **Delete Courses**: 
-   - From the courses list, click "Delete" to remove a course
+3. **Track Progress**: 
+   - Mark lessons as complete as you go through them
+   - Take quizzes to test your knowledge
+   - View your progress percentage on the course detail page
+
+4. **Export Courses**:
+   - Click "Export as PDF" to download a formatted PDF version
+   - Click "Export as Markdown" to download a Markdown file
+
+5. **Take Notes & Bookmark**:
+   - Click the bookmark icon to save important lessons
+   - Use the notes editor to write personal notes for each lesson
+
+6. **Share Courses**:
+   - Make courses public and share via generated links
+   - Others can view and clone your public courses
 
 ## Project Structure
 
@@ -136,7 +157,17 @@ npm start
 - `GET /api/courses` - Fetch all courses
 - `POST /api/courses` - Generate and create a new course
 - `GET /api/courses/[id]` - Fetch a specific course with lessons
+- `PUT /api/courses/[id]` - Update a course
 - `DELETE /api/courses/[id]` - Delete a course
+- `GET /api/courses/[id]/export` - Export course as PDF or Markdown
+- `GET /api/progress` - Get user's learning progress
+- `POST /api/progress` - Update lesson progress
+- `GET /api/notes` - Get user's notes
+- `POST /api/notes` - Create a note
+- `GET /api/bookmarks` - Get user's bookmarks
+- `POST /api/bookmarks` - Create a bookmark
+- `GET /api/favorites` - Get user's favorite courses
+- `POST /api/favorites` - Add a course to favorites
 
 ## Scripts
 

@@ -16,11 +16,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <body className="antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange={false}
+          storageKey="ai-course-theme"
+        >
           <SessionProvider>
             <Navbar />
-            <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
+            <main className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
               {children}
             </main>
           </SessionProvider>
