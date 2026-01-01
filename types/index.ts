@@ -1,4 +1,3 @@
-// Course related types
 export interface Course {
   id: number;
   userId: string;
