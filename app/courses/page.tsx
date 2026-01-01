@@ -1,20 +1,11 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-interface Course {
-  id: number;
-  title: string;
-  description: string;
-  topic: string;
-  level: string;
-  duration: string;
-  thumbnail?: string | null;
-  createdAt: Date;
-}
+import { useCourses } from "@/hooks";
+import type { Course } from "@/types";
 
 type SortOption = "date" | "title" | "level";
 type FilterLevel = "all" | "beginner" | "intermediate" | "advanced";
@@ -22,33 +13,11 @@ type FilterLevel = "all" | "beginner" | "intermediate" | "advanced";
 export default function CoursesPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [courses, setCourses] = useState<Course[]>([]);
+  const { courses, loading, refetch } = useCourses();
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterLevel, setFilterLevel] = useState<FilterLevel>("all");
   const [sortBy, setSortBy] = useState<SortOption>("date");
-
-  const fetchCourses = async () => {
-    try {
-      const response = await fetch("/api/courses");
-      if (response.ok) {
-        const data = await response.json();
-        setCourses(data);
-        setFilteredCourses(data);
-      } else {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: "Unknown error" }));
-        console.error("Error fetching courses:", errorData);
-        // Still set loading to false even on error
-      }
-    } catch (error) {
-      console.error("Error fetching courses:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const applyFiltersAndSort = useCallback(() => {
     let filtered = [...courses];
@@ -97,16 +66,12 @@ export default function CoursesPage() {
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/auth/signin");
-      return;
     }
-    if (session) {
-      fetchCourses();
-    }
-  }, [session, status, router]);
+  }, [status, router]);
 
   useEffect(() => {
     applyFiltersAndSort();
-  }, [applyFiltersAndSort]);
+  }, [applyFiltersAndSort, courses]);
 
   if (status === "loading") {
     return (
@@ -131,7 +96,8 @@ export default function CoursesPage() {
       });
 
       if (response.ok) {
-        setCourses(courses.filter((course) => course.id !== id));
+        alert("Course deleted successfully");
+        refetch();
       }
     } catch (error) {
       console.error("Error deleting course:", error);

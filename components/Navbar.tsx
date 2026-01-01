@@ -3,40 +3,21 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useReviewStats } from "@/hooks";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
-  const [reviewCount, setReviewCount] = useState(0);
+  const { stats } = useReviewStats();
+  
+  const reviewCount = stats ? stats.dueToday + stats.overdue : 0;
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
     router.push("/auth/signin");
     router.refresh();
-  };
-
-  useEffect(() => {
-    if (session) {
-      fetchReviewCount();
-      // Refresh count every 5 minutes
-      const interval = setInterval(fetchReviewCount, 5 * 60 * 1000);
-      return () => clearInterval(interval);
-    }
-  }, [session]);
-
-  const fetchReviewCount = async () => {
-    try {
-      const response = await fetch("/api/reviews/stats");
-      if (response.ok) {
-        const data = await response.json();
-        setReviewCount(data.dueToday + data.overdue);
-      }
-    } catch (error) {
-      console.error("Error fetching review count:", error);
-    }
   };
 
   const getLinkClassName = (path: string) => {

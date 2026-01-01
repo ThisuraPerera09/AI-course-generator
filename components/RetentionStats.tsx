@@ -1,45 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-interface Stats {
-  total: number;
-  statusCounts: {
-    new: number;
-    learning: number;
-    reviewing: number;
-    mastered: number;
-  };
-  dueToday: number;
-  overdue: number;
-  upcoming: number;
-  avgRetention: number;
-  avgScore: number;
-  streak: {
-    current: number;
-    longest: number;
-  };
-}
+import { useReviewStats } from "@/hooks";
 
 export default function RetentionStats() {
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
-    try {
-      const response = await fetch("/api/reviews/stats");
-      const data = await response.json();
-      setStats(data);
-    } catch (error) {
-      console.error("Error fetching stats:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { stats, loading } = useReviewStats();
 
   if (loading) {
     return (

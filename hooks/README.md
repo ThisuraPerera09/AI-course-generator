@@ -7,6 +7,8 @@ This directory contains reusable React hooks for the AI Course Generator applica
 ### `useReviewStats(autoRefresh?)`
 Fetches and manages SRS review statistics with automatic refresh.
 
+**Authentication:** Only fetches when user is authenticated. Safe to use in any component.
+
 **Parameters:**
 - `autoRefresh` (boolean, optional): Enable auto-refresh every 5 minutes (default: `true`)
 

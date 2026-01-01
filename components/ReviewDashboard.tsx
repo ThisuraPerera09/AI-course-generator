@@ -1,84 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import { useReviews, useReviewStats } from "@/hooks";
+import type { ReviewWithDetails, ReviewStats } from "@/types";
 
-interface Review {
-  review: {
-    id: number;
-    nextReviewDate: Date;
-    reviewCount: number;
-    lastScore: number;
-    averageScore: number;
-    status: string;
-    retentionRate: number;
-  };
-  lesson: {
-    id: number;
-    title: string;
-    order: number;
-  };
-  course: {
-    id: number;
-    title: string;
-    topic: string;
-  };
-}
-
-interface Stats {
-  total: number;
-  statusCounts: {
-    new: number;
-    learning: number;
-    reviewing: number;
-    mastered: number;
-  };
-  dueToday: number;
-  overdue: number;
-  upcoming: number;
-  avgRetention: number;
-  avgScore: number;
-  streak: {
-    current: number;
-    longest: number;
-  };
-}
+type ReviewFilter = "due" | "overdue" | "upcoming" | "all";
 
 export default function ReviewDashboard() {
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [filter, setFilter] = useState<"due" | "overdue" | "upcoming" | "all">(
-    "due"
-  );
-  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<ReviewFilter>("due");
+  const { reviews, loading: reviewsLoading } = useReviews(filter);
+  const { stats, loading: statsLoading } = useReviewStats();
 
-  useEffect(() => {
-    fetchReviews();
-    fetchStats();
-  }, [filter]);
-
-  const fetchReviews = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/reviews?filter=${filter}`);
-      const data = await response.json();
-      setReviews(data.reviews || []);
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchStats = async () => {
-    try {
-      const response = await fetch("/api/reviews/stats");
-      const data = await response.json();
-      setStats(data);
-    } catch (error) {
-      console.error("Error fetching stats:", error);
-    }
-  };
+  const loading = reviewsLoading || statsLoading;
 
   const getStatusColor = (status: string) => {
     switch (status) {
