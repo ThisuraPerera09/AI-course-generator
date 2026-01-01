@@ -151,7 +151,6 @@ export default function CourseDetailPage() {
   const progressPercentage =
     totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
-  // Find the last incomplete lesson (or first lesson if none completed)
   const sortedLessons = [...(course.lessons || [])].sort(
     (a, b) => a.order - b.order
   );

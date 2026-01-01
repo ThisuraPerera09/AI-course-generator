@@ -73,12 +73,12 @@ export const courses = sqliteTable("courses", {
   description: text("description"),
   topic: text("topic").notNull(),
   level: text("level").notNull(), // beginner, intermediate, advanced
-  duration: text("duration"), // e.g., "4 weeks", "8 hours"
-  thumbnail: text("thumbnail"), // URL or path to course thumbnail image
+  duration: text("duration"),
+  thumbnail: text("thumbnail"),
   isPublic: integer("is_public", { mode: "boolean" })
     .notNull()
     .$defaultFn(() => false),
-  shareToken: text("share_token").unique(), // Unique token for shareable links
+  shareToken: text("share_token").unique(),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
@@ -107,10 +107,10 @@ export const quizzes = sqliteTable("quizzes", {
     .notNull()
     .references(() => lessons.id, { onDelete: "cascade" }),
   question: text("question").notNull(),
-  options: text("options").notNull(), // JSON array of options
-  correctAnswer: integer("correct_answer").notNull(), // Index of correct answer (0-based)
-  explanation: text("explanation"), // Explanation for the correct answer
-  order: integer("order").notNull(), // Order of question within the lesson
+  options: text("options").notNull(),
+  correctAnswer: integer("correct_answer").notNull(),
+  explanation: text("explanation"),
+  order: integer("order").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
@@ -198,13 +198,23 @@ export const quizReviews = sqliteTable("quiz_reviews", {
     onDelete: "set null",
   }),
   nextReviewDate: integer("next_review_date", { mode: "timestamp" }).notNull(),
-  reviewCount: integer("review_count").notNull().$defaultFn(() => 0),
-  currentInterval: integer("current_interval").notNull().$defaultFn(() => 1), // in days
+  reviewCount: integer("review_count")
+    .notNull()
+    .$defaultFn(() => 0),
+  currentInterval: integer("current_interval")
+    .notNull()
+    .$defaultFn(() => 1), // in days
   lastScore: integer("last_score").notNull(), // 0-100
   averageScore: integer("average_score").notNull(), // running average
-  retentionRate: integer("retention_rate").notNull().$defaultFn(() => 100), // 0-100
-  status: text("status").notNull().$defaultFn(() => "new"), // 'new', 'learning', 'reviewing', 'mastered'
-  easeFactor: integer("ease_factor").notNull().$defaultFn(() => 250), // SM-2 algorithm (250 = 2.5)
+  retentionRate: integer("retention_rate")
+    .notNull()
+    .$defaultFn(() => 100), // 0-100
+  status: text("status")
+    .notNull()
+    .$defaultFn(() => "new"), // 'new', 'learning', 'reviewing', 'mastered'
+  easeFactor: integer("ease_factor")
+    .notNull()
+    .$defaultFn(() => 250), // SM-2 algorithm (250 = 2.5)
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
